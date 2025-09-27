@@ -1,0 +1,40 @@
+//@version=5
+indicator("Base Indicator", overlay=true)
+
+// Inputs
+length = input.int(14, minval=1, title="Longueur de base")
+fastLength = input.int(7, minval=1, title="Longueur rapide")
+showBackground = input.bool(true, title="Coloration de fond")
+alertOnCross = input.bool(true, title="Alertes sur croisement")
+
+// Calculs
+ma = ta.sma(close, length)
+fastMa = ta.ema(close, fastLength)
+
+// Conditions simples
+haussiere = close > ma
+baissiere = close < ma
+crossUp = ta.crossover(fastMa, ma)
+crossDown = ta.crossunder(fastMa, ma)
+
+// Tracés
+plot(ma, title="Moyenne mobile", color=color.orange, linewidth=2)
+plot(fastMa, title="Moyenne rapide", color=color.new(color.blue, 0), linewidth=1)
+plotshape(haussiere, title="Signal haussier", style=shape.triangleup, location=location.belowbar, color=color.new(color.green, 0))
+plotshape(baissiere, title="Signal baissier", style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0))
+plotshape(crossUp, title="Croisement haussier", style=shape.circle, location=location.belowbar, color=color.new(color.green, 50), size=size.tiny)
+plotshape(crossDown, title="Croisement baissier", style=shape.circle, location=location.abovebar, color=color.new(color.red, 50), size=size.tiny)
+
+// Mise en évidence de tendance
+trendColor = haussiere ? color.new(color.green, 85) : baissiere ? color.new(color.red, 85) : na
+if showBackground
+    bgcolor(trendColor, title="Fond tendance")
+
+// Alertes
+if alertOnCross
+    alertcondition(crossUp, title="Croisement haussier", message="La moyenne rapide passe au-dessus de la moyenne principale.")
+    alertcondition(crossDown, title="Croisement baissier", message="La moyenne rapide passe en dessous de la moyenne principale.")
+
+// Commentaires
+// Cette base fournit une structure simple pour construire un script Pine.
+// Ajoutez vos propres conditions, alertes ou visualisations selon vos besoins.
