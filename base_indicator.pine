@@ -1,0 +1,21 @@
+//@version=5
+indicator("Base Indicator", overlay=true)
+
+// Inputs
+length = input.int(14, minval=1, title="Longueur de base")
+
+// Calculs
+ma = ta.sma(close, length)
+
+// Conditions simples
+haussiere = close > ma
+baissiere = close < ma
+
+// Tracés
+plot(ma, title="Moyenne mobile", color=color.orange, linewidth=2)
+plotshape(haussiere, title="Signal haussier", style=shape.triangleup, location=location.belowbar, color=color.new(color.green, 0))
+plotshape(baissiere, title="Signal baissier", style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0))
+
+// Commentaires
+// Cette base fournit une structure simple pour construire un script Pine.
+// Ajoutez vos propres conditions, alertes ou visualisations selon vos besoins.
